@@ -253,6 +253,30 @@ def users():
 
   context = dict(data = names)
   return render_template("Users.html",**context)
+  
+@app.route('/toplist')
+def toplist():
+  print request.args
+
+  cursor = g.conn.execute('''
+  select a2.rank,a2.name as Record,a1.name as Artist
+  from
+  (select p.recordid, a.name 
+  from perform p join artists a 
+  on p.artistid=a.artistid) AS a1,
+  (select r.recordid,r.name,i.rank
+  from include i,toplists t,records r 
+  where r.recordid=i.recordid and i.toplistid=t.toplistid) AS a2
+  where a1.recordid=a2.recordid
+  Order By a2.rank;
+  ''')
+  names = []
+  for result in cursor:
+    names.append([result[0],result[1],result[2]])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = names)
+  return render_template("Toplists.html",**context)
 
 
 # Example of adding new data to the database
