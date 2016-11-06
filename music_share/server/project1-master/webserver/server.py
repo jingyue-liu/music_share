@@ -205,10 +205,11 @@ def albums():
 def artists():
   print request.args
 
-  cursor = g.conn.execute("SELECT Name FROM Artists")
+  cursor = g.conn.execute("SELECT ArtistID,Name FROM Artists")
   names = []
+  indexs = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append([result[0],result[1]])  # can also be accessed using result[0]
   cursor.close()
 
   context = dict(data = names)
