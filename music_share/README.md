@@ -25,6 +25,7 @@ Overall ER-diagram is attached as pdf.
 the information of artist, album and record. They may find the singer’s other records and albums. They can check out today’s toplists of different genres.
 
 5. Implentation
+
 	1 Database set up
 
         python musicshare.py
