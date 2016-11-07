@@ -70,10 +70,42 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
+  
+  <table align="center" id="tab1">
+    <tr>
+      <th>User</th>
+      <th>Rate</th>
+	  <th>Comment</th>
+    </tr>
+    {% for line in review %}
+	  <tr>
+        {% for i in line %}
+          <td>{{i}}</td>
+        {% endfor %}
+      </tr>
+	{% endfor %}
+  </table>
 
 <script type="text/javascript">
 
 var Ptr=document.getElementById("tab").getElementsByTagName("tr");
+function $() {
+    for (j=1;j<Ptr.length+1;j++) { 
+    Ptr[j-1].className = (j%2>0)?"t1":"t2"; 
+    }
+}
+window.onload=$;
+for(var j=0;j<Ptr.length;j++) {
+    Ptr[j].onmouseover=function(){
+    this.tmpClass=this.className;
+    this.className = "t3";    
+    };
+    Ptr[j].onmouseout=function(){
+    this.className=this.tmpClass;
+    };
+}
+
+var Ptr=document.getElementById("tab1").getElementsByTagName("tr");
 function $() {
     for (j=1;j<Ptr.length+1;j++) { 
     Ptr[j-1].className = (j%2>0)?"t1":"t2"; 

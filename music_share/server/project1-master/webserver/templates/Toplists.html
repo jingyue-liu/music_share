@@ -12,7 +12,7 @@ tr.t2 td {background-color:#eee;}/* 第二行的背景色 */
 tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 
 	*{
-		margin:0 auto;
+		margin:5 auto;
 		padding:0;
     }
 
@@ -51,11 +51,15 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 <li><a href="/toplist">Toplist</a></li>
 <li><a href="/test">testing</a></li>
 </ul>
+  <form align="center" method="POST" action="/one_record">
+    <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
+  </form>  
   <table id="tab" align="center">
     <tr>
       <th>Rank</th>
       <th>Song</th>
       <th>Artist</th>
+	  <th>index</th>
     </tr>
     {% for line in data %}
 	  <tr>
@@ -65,6 +69,9 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
+  <form align="center" method="POST" action="/one_record">
+    <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
+  </form>  
 <script type="text/javascript">
 
 var Ptr=document.getElementById("tab").getElementsByTagName("tr");

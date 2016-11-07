@@ -276,18 +276,31 @@ def one_record():
   for result in cursor:
     names.append([result[0],result[1],result[2],result[3],result[4],result[5],result[6]])  # can also be accessed using result[0]
   cursor.close()
-
-  context = dict(data = names)
+  cursor1 = g.conn.execute('''
+  SELECT u.Name, rev.rate, rev.Comment
+  FROM Review_Write_About as rev,Users as u
+  WHERE rev.RecordID = %s and rev.AccountID=u.AccountID
+  ''',(int(Id),))
+  reviews=[]
+  for result in cursor1 :
+    reviews.append([result[0],result[1],result[2]])
+  cursor1.close()
+  context = dict(data = names,review =reviews)
+  print context
   return render_template("/one_record.html",**context)  
 
 @app.route('/reviews')
 def reviews():
   print request.args
 
-  cursor = g.conn.execute("SELECT Comment FROM Review_Write_About")
+  cursor = g.conn.execute('''
+  SELECT r.Name, u.Name, rev.rate, rev.Comment 
+  FROM Review_Write_About as rev,Users as u,Records as r
+  WHERE u.AccountID=rev.AccountID and rev.RecordID=r.RecordID
+  ''')
   names = []
   for result in cursor:
-    names.append(result[0])  # can also be accessed using result[0]
+    names.append([result[0],result[1],result[2],result[3]])  # can also be accessed using result[0]
   cursor.close()
 
   context = dict(data = names)
@@ -311,7 +324,7 @@ def toplist():
   print request.args
 
   cursor = g.conn.execute('''
-  select a2.rank,a2.name as Record,a1.name as Artist
+  select a2.rank,a2.name as Record,a1.name as Artist, a2.recordid
   from
   (select p.recordid, a.name 
   from perform p join artists a 
@@ -324,7 +337,7 @@ def toplist():
   ''')
   names = []
   for result in cursor:
-    names.append([result[0],result[1],result[2]])  # can also be accessed using result[0]
+    names.append([result[0],result[1],result[2],result[3]])  # can also be accessed using result[0]
   cursor.close()
 
   context = dict(data = names)
