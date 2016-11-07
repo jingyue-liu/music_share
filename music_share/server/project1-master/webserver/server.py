@@ -191,15 +191,32 @@ def index():
 def albums():
   print request.args
 
-  cursor = g.conn.execute("SELECT Name FROM Albums_Create")
+  cursor = g.conn.execute("SELECT AlbumID,Name FROM Albums_Create")
   names = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append([result[0],result[1]])  # can also be accessed using result[0]
   cursor.close()
 
   context = dict(data = names)
 
   return render_template("Albums.html",**context)
+  
+@app.route('/album_records',methods=['POST'])
+def album_records():
+  print request.args
+  Id = request.form['id']
+  cursor = g.conn.execute('''
+  SELECT r.RecordID,r.Name
+  FROM Have as h, Records as r
+  WHERE r.RecordID = h.RecordID and h.AlbumID = %s
+  ''',(str(Id),))
+  names = []
+  for result in cursor:
+    names.append([result[0],result[1]])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = names)
+  return render_template("Artists_album.html",**context)  
   
 @app.route('/artists')
 def artists():
@@ -215,19 +232,54 @@ def artists():
   context = dict(data = names)
   return render_template("Artists.html",**context)
   
+@app.route('/artists_album',methods=['POST'])
+def artists_album():
+  print request.args
+  Id = request.form['id']
+  cursor = g.conn.execute('''
+  SELECT AL.AlbumID,AL.Name
+  FROM Albums_Create as AL
+  WHERE AL.ArtistID = %s
+  ''',(int(Id),))
+  names = []
+  for result in cursor:
+    names.append([result[0],result[1]])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = names)
+  return render_template("Artists_album.html",**context)  
+  
 @app.route('/records')
 def records():
   print request.args
 
-  cursor = g.conn.execute("SELECT Name FROM Records")
+  cursor = g.conn.execute("SELECT RecordID,Name FROM Records")
   names = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append([result[0],result[1]])  # can also be accessed using result[0]
   cursor.close()
 
   context = dict(data = names)
   return render_template("Records.html",**context)
   
+
+@app.route('/one_record',methods=['POST'])
+def one_record():
+  print request.args
+  Id = request.form['id']
+  cursor = g.conn.execute('''
+  SELECT r.RecordID,r.Name,r.Language,r.ReleaseYear,(r.Length/60000-0.5)::int::text||'min'::text||((r.Length-(r.Length/60000-0.5)::int*60000)/1000-0.5)::int::text||'s',r.Style,r.Songwriter
+  FROM Records as r
+  WHERE r.RecordID = %s
+  ''',(int(Id),))
+  names = []
+  for result in cursor:
+    names.append([result[0],result[1],result[2],result[3],result[4],result[5],result[6]])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = names)
+  return render_template("/one_record.html",**context)  
+
 @app.route('/reviews')
 def reviews():
   print request.args
@@ -278,23 +330,46 @@ def toplist():
   context = dict(data = names)
   return render_template("Toplists.html",**context)
 
+@app.route('/test')
+def test():
+  print request.args
+
+  cursor = g.conn.execute("SELECT * FROM test")
+  names = []
+  for result in cursor:
+    names.append(result['name'])  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(data = names)
+  return render_template("test.html",**context)
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
 def add():
   name = request.form['name']
   print name
-  #cmd = 'INSERT INTO test(name) VALUES (:name1), (:name2)';
   cmd = 'INSERT INTO test(name) VALUES (:name1)';
-  #g.conn.execute(text(cmd), name1 = name, name2 = name);
   g.conn.execute(text(cmd), name1 = name);
-  return redirect('/')
-
+  return redirect('/test')
+  
+@app.route('/test_extend', methods=['POST'])
+def test_extend():
+  Id = request.form['id']
+  print Id
+  cursor = g.conn.execute("SELECT * FROM test where id=%s",(str(Id),))
+  names = []
+  for result in cursor:
+    names.append([result[0],result[1]])  # can also be accessed using result[0]
+  cursor.close()
+  
+  context = dict(data = names)
+  return render_template("test_extend.html",**context)
 
 @app.route('/login')
 def login():
     abort(401)
     this_is_never_executed()
+
 
 
 if __name__ == "__main__":

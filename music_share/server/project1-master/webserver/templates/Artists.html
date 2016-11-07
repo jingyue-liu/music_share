@@ -14,7 +14,10 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 </style>
 </head>
 <body>
-  <h1>Artists</h1>  
+  <h1>Artists</h1> 
+  <form method="POST" action="/artists_album">
+    <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
+  </form>  
   <table id="tab">
     <tr>
       <th>index</th>
@@ -28,6 +31,9 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
+  <form method="POST" action="/artists_album">
+    <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
+  </form> 
 <script type="text/javascript">
 
 var Ptr=document.getElementById("tab").getElementsByTagName("tr");

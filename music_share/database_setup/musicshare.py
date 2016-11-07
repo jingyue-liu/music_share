@@ -43,7 +43,7 @@ CREATE TABLE Belong(
 	PRIMARY KEY(GroupID,SingerID)
 );
 ''');
-#5 Album_Create
+#5 Albums_Create
 cur.execute('''
 DROP TABLE IF EXISTS Albums_Create CASCADE;
 CREATE TABLE Albums_Create(

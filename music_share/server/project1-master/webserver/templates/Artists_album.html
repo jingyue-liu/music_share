@@ -14,14 +14,14 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 </style>
 </head>
 <body>
-  <h1>Albums</h1> 
-  <form method="POST" action="/album_records">
+  <h1>Chosen artist's albums</h1> 
+  <form method="POST" action="/artists_album">
     <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form>  
   <table id="tab">
     <tr>
       <th>index</th>
-      <th>Name</th>
+      <th>Album Name</th>
     </tr>
     {% for line in data %}
 	  <tr>
@@ -31,7 +31,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
-  <form method="POST" action="/album_records">
+  <form method="POST" action="/artists_album">
     <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form> 
 <script type="text/javascript">
