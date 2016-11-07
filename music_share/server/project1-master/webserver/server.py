@@ -206,17 +206,17 @@ def album_records():
   print request.args
   Id = request.form['id']
   cursor = g.conn.execute('''
-  SELECT r.RecordID,r.Name
-  FROM Have as h, Records as r
-  WHERE r.RecordID = h.RecordID and h.AlbumID = %s
-  ''',(str(Id),))
+  SELECT r.RecordID,r.Name,r.Language,r.ReleaseYear,(r.Length/60000-0.5)::int::text||'min'::text||((r.Length-(r.Length/60000-0.5)::int*60000)/1000-0.5)::int::text||'s',r.Style,r.Songwriter
+  FROM Records as r,Have as h
+  WHERE r.RecordID = h.RecordID and h.AlbumID=%s
+  ''',(int(Id),))
   names = []
   for result in cursor:
-    names.append([result[0],result[1]])  # can also be accessed using result[0]
+    names.append([result[0],result[1],result[2],result[3],result[4],result[5],result[6]])  # can also be accessed using result[0]
   cursor.close()
 
   context = dict(data = names)
-  return render_template("Artists_album.html",**context)  
+  return render_template("/Album_records.html",**context) 
   
 @app.route('/artists')
 def artists():

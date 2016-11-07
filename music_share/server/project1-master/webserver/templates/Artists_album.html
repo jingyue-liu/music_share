@@ -11,14 +11,51 @@ tr.t1 td {background-color:#fff;}/* 第一行的背景色 */
 tr.t2 td {background-color:#eee;}/* 第二行的背景色 */
 tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 
+	*{
+		margin:5 auto;
+		padding:0;
+    }
+
+	ul{
+	  margin:10 auto;
+      list-style-type:none;
+      text-align:center;
+      font-size:15pt;
+    }
+
+   li{
+      display:inline-block;
+      width:80px;
+      padding:10px;
+      background-color:#6495ED;
+    }
+	a:link,a:visited,a:hover,a:active{
+            color:#fff;
+            text-decoration:none;
+    }
+	a{
+      display:block;/*整体变为可点击区域，而不只是字*/
+    }
 </style>
 </head>
 <body>
-  <h1>Chosen artist's albums</h1> 
-  <form method="POST" action="/artists_album">
+  <h1 align="center">Chosen artist's albums</h1> 
+  <!-- 导航栏 -->
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/albums">Albums</a></li>
+<li><a href="/artists">Artists</a></li>
+<li><a href="/records">Records</a></li>
+<li><a href="/reviews">Reviews</a></li>
+<li><a href="/users">Users</a></li>
+<li><a href="/toplist">Toplist</a></li>
+<li><a href="/test">testing</a></li>
+</ul>
+
+  <form align="center" method="POST" action="/album_records">
     <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form>  
-  <table id="tab">
+  <table align="center" id="tab">
     <tr>
       <th>index</th>
       <th>Album Name</th>
@@ -31,7 +68,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
-  <form method="POST" action="/artists_album">
+  <form align="center" method="POST" action="/album_records">
     <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form> 
 <script type="text/javascript">

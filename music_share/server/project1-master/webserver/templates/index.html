@@ -1,27 +1,56 @@
 <html>
+<head>
   <style>
+	*{
+		margin:5 auto;
+		padding:0;
+    }
     body{ 
       font-size: 15pt;
       font-family: arial;
     }
-  </style>
 
+	ul{
+	  margin:10 auto;
+      list-style-type:none;
+      text-align:center;
+      font-size:15pt;
+    }
+
+   li{
+      display:inline-block;
+      width:80px;
+      padding:10px;
+      background-color:#6495ED;
+    }
+	a:link,a:visited,a:hover,a:active{
+            color:#fff;
+            text-decoration:none;
+    }
+	a{
+      display:block;/*整体变为可点击区域，而不只是字*/
+    }
+
+	
+  </style>
+</head>
 
 <body>
-  <h1>Music Share: Home</h1>
-  <!--<div>{{data}}</div>*/-->
-<p><a href="/albums">See the albums</a></p>
-<p><a href="/artists">See the artists</a></p>
-<p><a href="/records">See the records</a></p>
-<p><a href="/reviews">See the reviews</a></p>
-<p><a href="/users">See the users</a></p>
-<p><a href="/toplist">See today's toplist</a></p>
-<p><a href="/test">Go for testing</a></p>
-  <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div>
+  <h1 align="center">Music Share: Home</h1>
+<!-- 导航栏 -->
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/albums">Albums</a></li>
+<li><a href="/artists">Artists</a></li>
+<li><a href="/records">Records</a></li>
+<li><a href="/reviews">Reviews</a></li>
+<li><a href="/users">Users</a></li>
+<li><a href="/toplist">Toplist</a></li>
+<li><a href="/test">testing</a></li>
+</ul>
+
+<p align="center"><img src="../static/images/music_1.jpg"  alt="MusicShare"/></p>
+
 
 </body>
 
