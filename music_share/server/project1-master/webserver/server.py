@@ -74,8 +74,8 @@ engine.execute("""INSERT INTO test(name) VALUES ('ada lovelace');""")
 #
 # END SQLITE SETUP CODE
 #
-
-
+####### this is for LoggedInUserID   ########
+LoggedInUserID = -1
 
 @app.before_request
 def before_request():
@@ -120,6 +120,7 @@ def teardown_request(exception):
 #
 @app.route('/')
 def index():
+  global LoggedInUserID
   """
   request is a special object that Flask provides to access web request information:
 
@@ -169,14 +170,16 @@ def index():
   #     <div>{{n}}</div>
   #     {% endfor %}
   #
-  context = dict()
 
 
   #
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  return render_template("index.html", **context)
+  if LoggedInUserID==-1:
+    return render_template("index.html")
+  else:
+    return redirect('/logged_home')
 
 #
 # This is an example of a different path.  You can see it at
@@ -186,6 +189,22 @@ def index():
 # notice that the functio name is another() rather than index()
 # the functions for each app.route needs to have different names
 #
+
+
+@app.route('/logged_home')
+def logged_home():
+  global LoggedInUserID
+  print request.args
+
+  cursor = g.conn.execute("SELECT Name FROM Users WHERE AccountID=%s",(LoggedInUserID,))
+
+  for result in cursor:
+    Name=result[0]  # can also be accessed using result[0]
+  cursor.close()
+
+  context = dict(NameData = Name)
+
+  return render_template("Logged_home.html",**context)
   
 @app.route('/albums')
 def albums():
@@ -342,6 +361,37 @@ def toplist():
 
   context = dict(data = names)
   return render_template("Toplists.html",**context)
+  
+
+@app.route('/myshare')
+def myshare():
+  global LoggedInUserID
+  print request.args
+  UID = LoggedInUserID
+  #personallists
+  cursor = g.conn.execute('''
+  SELECT P.PersonalListID,P.Name,R.RecordID,R.Name
+  FROM PersonalLists_Save as P,Users as U,Contain as C,Records as R
+  WHERE U.AccountID = P.AccountID and U.AccountID=%s and C.PersonalListID=P.PersonalListID and C.AccountID=U.AccountID and C.RecordID=R.RecordID
+  ORDER BY P.PersonalListID
+  ''',(UID,))
+  names = []
+  for result in cursor:
+    names.append([result[0],result[1],result[2],result[3]]) 
+  cursor.close()
+  #reviews
+  cursor1 = g.conn.execute('''
+  SELECT r.Name, u.Name, rev.rate, rev.Comment 
+  FROM Review_Write_About as rev,Users as u,Records as r
+  WHERE u.AccountID=%s and u.AccountID=rev.AccountID and rev.RecordID=r.RecordID
+  ''',(UID,))
+  names1 = []
+  for result in cursor1:
+    names1.append([result[0],result[1],result[2],result[3]]) 
+  cursor1.close()
+
+  context = dict(data = names,data1=names1)
+  return render_template("/Myshare.html",**context) 
 
 @app.route('/test')
 def test():
@@ -378,10 +428,22 @@ def test_extend():
   context = dict(data = names)
   return render_template("test_extend.html",**context)
 
-@app.route('/login')
+@app.route('/login', methods=['POST'])
 def login():
-    abort(401)
-    this_is_never_executed()
+	global LoggedInUserID
+	UserID = request.form['UserID']
+	Password = request.form['Password']
+	print "ID:"+str(UserID)+"--","Password:"+str(Password)
+	#eg: 1,fhgjhu
+	if int(UserID)==1 and str(Password)=='fhgjhu':
+		LoggedInUserID = int(UserID)
+	return redirect('/')
+	
+@app.route('/logoff', methods=['POST'])
+def logoff():
+	global LoggedInUserID
+	LoggedInUserID = -1
+	return redirect('/')
 
 
 
