@@ -49,7 +49,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 <li><a href="/reviews">Reviews</a></li>
 <li><a href="/users">Users</a></li>
 <li><a href="/toplist">Toplist</a></li>
-<li><a href="/test">testing</a></li>
+<li><a href="/test">Instruction</a></li>
 </ul>
  
   <table align="center" id="tab">
@@ -70,7 +70,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
-  
+  <p align="center">All the reviews of this record:</p>
   <table align="center" id="tab1">
     <tr>
       <th>User</th>
@@ -85,7 +85,10 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
-
+  <p align="center">Write your new review for this record:</p>
+    <form align="center" method="POST" action="/add_review">
+    <p>Index:<input type="text" name="Index"> Rate(1~5):<input type="text" name="Rate">Comment:<input type="text" name="Comment"><input type="submit" value="Write"></p>
+    </form>  
 <script type="text/javascript">
 
 var Ptr=document.getElementById("tab").getElementsByTagName("tr");

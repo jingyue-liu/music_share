@@ -1,29 +1,67 @@
 <html>
-  <style>
+<head>
+<style type="text/css" media="screen">
     body{ 
       font-size: 15pt;
       font-family: arial;
     }
-  </style>
+table {border-collapse:collapse;border:solid #999;}
+table td {border:solid #999;text-align:center}
+tr.t1 td {background-color:#fff;}/* 第一行的背景色 */
+tr.t2 td {background-color:#eee;}/* 第二行的背景色 */
+tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 
+	*{
+		margin:5 auto;
+		padding:0;
+    }
 
+	ul{
+	  margin:10 auto;
+      list-style-type:none;
+      text-align:center;
+      font-size:15pt;
+    }
+
+   li{
+      display:inline-block;
+      width:80px;
+      padding:10px;
+      background-color:#6495ED;
+    }
+	a:link,a:visited,a:hover,a:active{
+            color:#fff;
+            text-decoration:none;
+    }
+	a{
+      display:block;/*整体变为可点击区域，而不只是字*/
+    }
+</style>
+</head>
 <body>
-  <h1>This is for testing</h1>
-  <!--<div>{{data}}</div>*/-->
+  <h1 align="center">User Instruction</h1> 
+  <!-- 导航栏 -->
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="/albums">Albums</a></li>
+<li><a href="/artists">Artists</a></li>
+<li><a href="/records">Records</a></li>
+<li><a href="/reviews">Reviews</a></li>
+<li><a href="/users">Users</a></li>
+<li><a href="/toplist">Toplist</a></li>
+<li><a href="/test">Instruction </a></li>
+</ul>
 
-  <div>
-    {% for n in data %}
-    <div>{{n}}	</div>
-    {% endfor %}
-  </div>
-
-<p><a href="/another">Go to the other page</a></p>
-
-<form method="POST" action="/test_extend">
-<p>choose one id: <input type="text" name="id"> <input type="submit" value="Add"></p>
-</form>
+<p align="center">Hi, there! Welcome to MusicShare!</p>
+<p align="center">Please go to Home page for login.</p>
+<p align="center">Once you log in, you can check/make change to your own share.</p>
+<p align="center">If you have logged in but there is no MyShare button, go to Home Page~</p>
+<p align="center">You are still able to explore other info in this webset as a tourist without logging in.</p>
+<p align="center">Make sure you are being polite in your reviews~</p>
+<p align="center">Good luck with your adventure with MusicShare!</p>
 
 </body>
 
 
 </html>
+

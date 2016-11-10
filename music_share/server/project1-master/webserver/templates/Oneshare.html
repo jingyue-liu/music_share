@@ -39,7 +39,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 </style>
 </head>
 <body>
-  <h1 align="center">Albums</h1> 
+  <h1 align="center">One's Share</h1> 
   <!-- 导航栏 -->
 <ul>
 <li><a href="/">Home</a></li>
@@ -49,15 +49,13 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 <li><a href="/reviews">Reviews</a></li>
 <li><a href="/users">Users</a></li>
 <li><a href="/toplist">Toplist</a></li>
-<li><a href="/myshare">Myshare</a></li>
+<li><a href="/test">Instruction</a></li>
 </ul>
-<div align="center">My Sharing Lists</div>
+<div align="center">This user's Sharing Lists</div>
   <form align="center" method="POST" action="/one_record">
     <p>Check One Record: RecordIndex<input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form>  
-  <form align="center" method="POST" action="/deleteOneRecordInAList">
-    <p>Delete one share: ListIndex<input type="text" name="id">RecordIndex<input type="text" name="id"> <input type="submit" value="Delete"></p>
-  </form>  
+
   <table id="tab" align="center" margin:0 auto>
     <tr>      
 	  <th>ListIndex</th>
@@ -73,7 +71,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
-  <div align="center">My Sharing Reviews</div>
+  <div align="center">This users' Sharing Reviews</div>
   <table id="tab1" align="center">
     <tr>
       <th>Record</th>

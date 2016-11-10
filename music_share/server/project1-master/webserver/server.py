@@ -284,6 +284,7 @@ def records():
 
 @app.route('/one_record',methods=['POST'])
 def one_record():
+  global LoggedInUserID
   print request.args
   Id = request.form['id']
   cursor = g.conn.execute('''
@@ -304,9 +305,29 @@ def one_record():
   for result in cursor1 :
     reviews.append([result[0],result[1],result[2]])
   cursor1.close()
-  context = dict(data = names,review =reviews)
+  context = dict(data = names,review =reviews,logined=LoggedInUserID)
   print context
   return render_template("/one_record.html",**context)  
+  
+@app.route('/add_review', methods=['POST'])
+def add_review():
+  global LoggedInUserID
+  if LoggedInUserID==-1:
+    return redirect('/')
+  cursor1 = g.conn.execute('''SELECT COUNT(*) FROM Review_Write_About''')
+  ReviewID=0
+  for result in cursor1 :
+    ReviewID=result[0]+1
+  cursor1.close()
+  
+  Index = request.form['Index']
+  Rate = request.form['Rate']
+  Comment = request.form['Comment']
+  print Index,Rate,Comment
+  g.conn.execute('''
+  INSERT INTO  Review_Write_About (ReviewID,Rate,Comment,AccountID,RecordID) VALUES (%s,%s,%s,%s,%s)
+  ''',(int(ReviewID),int(Rate),str(Comment),LoggedInUserID,Index));
+  return "Thanks for your valuable review~\n\nNow you can either go back and refresh the record information or go to Myshare to check your own review! Also don't foget to check all the reviews written by all the users in the Review page~"
 
 @app.route('/reviews')
 def reviews():
@@ -329,10 +350,10 @@ def reviews():
 def users():
   print request.args
 
-  cursor = g.conn.execute("SELECT Name FROM Users")
+  cursor = g.conn.execute("SELECT AccountID,Name,Gender FROM Users")
   names = []
   for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
+    names.append([result[0],result[1],result[2]]) 
   cursor.close()
 
   context = dict(data = names)
@@ -389,9 +410,38 @@ def myshare():
   for result in cursor1:
     names1.append([result[0],result[1],result[2],result[3]]) 
   cursor1.close()
-
+  print names1
   context = dict(data = names,data1=names1)
   return render_template("/Myshare.html",**context) 
+  
+@app.route('/oneshare',methods=['POST'])
+def oneshare():
+  print request.args
+  UID = request.form['UserID']
+  #personallists
+  cursor = g.conn.execute('''
+  SELECT P.PersonalListID,P.Name,R.RecordID,R.Name
+  FROM PersonalLists_Save as P,Users as U,Contain as C,Records as R
+  WHERE U.AccountID = P.AccountID and U.AccountID=%s and C.PersonalListID=P.PersonalListID and C.AccountID=U.AccountID and C.RecordID=R.RecordID
+  ORDER BY P.PersonalListID
+  ''',(UID,))
+  names = []
+  for result in cursor:
+    names.append([result[0],result[1],result[2],result[3]]) 
+  cursor.close()
+  #reviews
+  cursor1 = g.conn.execute('''
+  SELECT r.Name, u.Name, rev.rate, rev.Comment 
+  FROM Review_Write_About as rev,Users as u,Records as r
+  WHERE u.AccountID=%s and u.AccountID=rev.AccountID and rev.RecordID=r.RecordID
+  ''',(UID,))
+  names1 = []
+  for result in cursor1:
+    names1.append([result[0],result[1],result[2],result[3]]) 
+  cursor1.close()
+  print names1
+  context = dict(data = names,data1=names1)
+  return render_template("/Oneshare.html",**context) 
 
 @app.route('/test')
 def test():
