@@ -119,6 +119,7 @@ CREATE	TABLE PersonalLists_Save(
 	PersonalListID int,
 	AccountID int,
 	Name text,
+	UNIQUE (Name,AccountID),
 	PRIMARY KEY(AccountID,PersonalListID),
 	FOREIGN KEY (AccountID) REFERENCES Users
 		ON DELETE CASCADE

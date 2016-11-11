@@ -39,7 +39,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 </style>
 </head>
 <body>
-  <h1 align="center">Chosen record information</h1> 
+  <h1 align="center">{{rname}}</h1> 
   <!-- 导航栏 -->
 <ul>
 <li><a href="/">Home</a></li>
@@ -54,33 +54,42 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
  
   <table align="center" id="tab">
     <tr>
-      <th>index</th>
-      <th>Record Name</th>
-	  <th>Language</th>
-	  <th>Release Year</th>
-	  <th>Length</th>
-	  <th>Genre</th>
-	  <th>Song writer</th>
+      <th>&nbsp;index&nbsp;</th>
+      <th>&nbsp;Record Name&nbsp;</th>
+	  <th>&nbsp;Language&nbsp;</th>
+	  <th>&nbsp;Release Year&nbsp;</th>
+	  <th>&nbsp;Length&nbsp;</th>
+	  <th>&nbsp;Genre&nbsp;</th>
+	  <th>&nbsp;Song writer&nbsp;</th>
     </tr>
     {% for line in data %}
 	  <tr>
         {% for i in line %}
-          <td>{{i}}</td>
+          <td>&nbsp;{{i}}&nbsp;</td>
         {% endfor %}
       </tr>
 	{% endfor %}
   </table>
+  
+  <form align="center" method="POST" action="/add_to_mylist">
+    <p>Add this record <select name="RID"><option value={{rID}}>{{rID}}</option></select> to my list:
+		<select name="MyListName">
+			{% for list in Mylists %}<option value={{list}}>{{list}}</option>{% endfor %}
+		</select> 
+		<input type="submit" value="Add"></p>
+  </form>  
+  
   <p align="center">All the reviews of this record:</p>
   <table align="center" id="tab1">
     <tr>
-      <th>User</th>
-      <th>Rate</th>
-	  <th>Comment</th>
+      <th>&nbsp;User&nbsp;</th>
+      <th>&nbsp;Rate&nbsp;</th>
+	  <th>&nbsp;Comment&nbsp;</th>
     </tr>
     {% for line in review %}
 	  <tr>
         {% for i in line %}
-          <td>{{i}}</td>
+          <td>&nbsp;{{i}}&nbsp;</td>
         {% endfor %}
       </tr>
 	{% endfor %}

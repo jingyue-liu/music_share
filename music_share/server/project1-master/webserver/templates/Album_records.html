@@ -57,18 +57,18 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
   </form>  
   <table align="center" id="tab">
     <tr>
-      <th>index</th>
-      <th>Record Name</th>
-	  <th>Language</th>
-	  <th>Release Year</th>
-	  <th>Length</th>
-	  <th>Genre</th>
-	  <th>Song writer</th>
+      <th>&nbsp;index&nbsp;</th>
+      <th>&nbsp;Record Name&nbsp;</th>
+	  <th>&nbsp;Language&nbsp;</th>
+	  <th>&nbsp;Release Year&nbsp;</th>
+	  <th>&nbsp;Length&nbsp;</th>
+	  <th>&nbsp;Genre&nbsp;</th>
+	  <th>&nbsp;Song writer&nbsp;</th>
     </tr>
     {% for line in data %}
 	  <tr>
         {% for i in line %}
-          <td>{{i}}</td>
+          <td>&nbsp;{{i}}&nbsp;</td>
         {% endfor %}
       </tr>
 	{% endfor %}

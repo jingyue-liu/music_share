@@ -324,6 +324,17 @@ def one_record():
   global LoggedInUserID
   print request.args
   Id = request.form['id']
+  
+  cursor0 = g.conn.execute('''
+  SELECT r.Name
+  FROM Records as r
+  WHERE r.RecordID = %s
+  ''',(int(Id),))
+  Rname = ''
+  for result in cursor0:
+    Rname=result[0]
+  cursor0.close()
+  
   cursor = g.conn.execute('''
   SELECT r.RecordID,r.Name,r.Language,r.ReleaseYear,(r.Length/60000-0.5)::int::text||'min'::text||((r.Length-(r.Length/60000-0.5)::int*60000)/1000-0.5)::int::text||'s',r.Style,r.Songwriter
   FROM Records as r
@@ -342,23 +353,55 @@ def one_record():
   for result in cursor1 :
     reviews.append([result[0],result[1],result[2]])
   cursor1.close()
-  context = dict(data = names,review =reviews,logined=LoggedInUserID)
+  
+  cursor2 = g.conn.execute('''
+  SELECT p.Name
+  FROM PersonalLists_Save p,Users u
+  WHERE p.AccountID=u.AccountID and p.AccountID=%s
+  ''',(LoggedInUserID,))
+  mylists=[]
+  for result in cursor2 :
+    mylists.append(result[0])
+  cursor2.close()
+  
+  context = dict(data = names,review =reviews,logined=LoggedInUserID,rname=Rname,rID=int(Id),Mylists=mylists)
   print context
   return render_template("/one_record.html",**context)  
   
+@app.route('/add_to_mylist', methods=['POST'])
+def add_to_mylist():
+  global LoggedInUserID
+  if LoggedInUserID==-1:
+    return redirect('/')
+  mylistname = request.form["MyListName"]
+  rId = int(request.form["RID"])
+  
+  cursor = g.conn.execute('''
+  SELECT P.PersonalListID FROM PersonalLists_Save P WHERE P.Name=%s and P.AccountID=%s
+  ''',(mylistname,LoggedInUserID))
+  PersonalListID=int(cursor.fetchone()[0])
+  cursor.close()
+  
+  cursor1 = g.conn.execute('''
+  INSERT INTO Contain (PersonalListID,AccountID,RecordID) VALUES (%s,%s,%s)
+  ''',(PersonalListID,LoggedInUserID,rId))
+  cursor1.close()
+  return redirect("/myshare")
+
 @app.route('/add_review', methods=['POST'])
 def add_review():
   global LoggedInUserID
   if LoggedInUserID==-1:
     return redirect('/')
   cursor1 = g.conn.execute('''
-  SELECT re.ReviewID 
+  SELECT MAX(re.ReviewID) 
   FROM Review_Write_About as re
   WHERE re.AccountID=%s
   ''',(LoggedInUserID,))
-  ReviewID=0
+  ReviewID=1
   for result in cursor1 :
-    ReviewID=int(result[0])+1
+    if result[0]!=None:
+      ReviewID=int(result[0])+1
   cursor1.close()
   print ReviewID
   Index = request.form['Index']
