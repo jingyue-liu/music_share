@@ -210,10 +210,14 @@ def logged_home():
 def albums():
   print request.args
 
-  cursor = g.conn.execute("SELECT AlbumID,Name FROM Albums_Create")
+  cursor = g.conn.execute('''
+  SELECT AL.AlbumID,AL.Name,AL.Hit_song,AR.Name 
+  FROM Albums_Create AL,Artists AR
+  WHERE AL.ArtistID=AR.ArtistID
+  ''')
   names = []
   for result in cursor:
-    names.append([result[0],result[1]])  # can also be accessed using result[0]
+    names.append([result[0],result[1],result[2],result[3]])
   cursor.close()
 
   context = dict(data = names)
@@ -233,15 +237,28 @@ def album_records():
   for result in cursor:
     names.append([result[0],result[1],result[2],result[3],result[4],result[5],result[6]])  # can also be accessed using result[0]
   cursor.close()
+  
+  cursor1 = g.conn.execute('''
+  SELECT Name
+  FROM Albums_Create
+  WHERE AlbumID=%s
+  ''',(int(Id),))
+  AlbumName = ''
+  for result in cursor1:
+    AlbumName = result[0]
+  cursor1.close()
 
-  context = dict(data = names)
+  context = dict(data = names, albumname= AlbumName)
   return render_template("/Album_records.html",**context) 
   
 @app.route('/artists')
 def artists():
   print request.args
 
-  cursor = g.conn.execute("SELECT ArtistID,Name FROM Artists")
+  cursor = g.conn.execute('''
+  SELECT ArtistID,Name 
+  FROM Artists
+  ''')
   names = []
   indexs = []
   for result in cursor:
@@ -265,7 +282,27 @@ def artists_album():
     names.append([result[0],result[1]])  # can also be accessed using result[0]
   cursor.close()
 
-  context = dict(data = names)
+  cursor1 = g.conn.execute('''
+  SELECT ar.Name
+  FROM Artists ar
+  WHERE ar.ArtistID = %s
+  ''',(int(Id),))
+  ArtistName=''
+  for result in cursor1:
+    ArtistName=result[0]
+  cursor1.close()  
+  
+  cursor2 = g.conn.execute('''
+  SELECT ar.Name,s.Gender,s.Nationality,s.Birthdate
+  FROM Artists ar LEFT OUTER JOIN Singers s ON ar.ArtistID=s.ArtistID
+  WHERE ar.ArtistID = %s
+  ''',(int(Id),))
+  artistInfo = []
+  for result in cursor2:
+    artistInfo.append([result[0],result[1],result[2],result[3]])  # can also be accessed using result[0]
+  cursor2.close()
+  
+  context = dict(data = names,artistname=ArtistName,artistinfo=artistInfo)
   return render_template("Artists_album.html",**context)  
   
 @app.route('/records')
@@ -314,12 +351,16 @@ def add_review():
   global LoggedInUserID
   if LoggedInUserID==-1:
     return redirect('/')
-  cursor1 = g.conn.execute('''SELECT COUNT(*) FROM Review_Write_About''')
+  cursor1 = g.conn.execute('''
+  SELECT re.ReviewID 
+  FROM Review_Write_About as re
+  WHERE re.AccountID=%s
+  ''',(LoggedInUserID,))
   ReviewID=0
   for result in cursor1 :
-    ReviewID=result[0]+1
+    ReviewID=int(result[0])+1
   cursor1.close()
-  
+  print ReviewID
   Index = request.form['Index']
   Rate = request.form['Rate']
   Comment = request.form['Comment']
@@ -329,6 +370,17 @@ def add_review():
   ''',(int(ReviewID),int(Rate),str(Comment),LoggedInUserID,Index));
   return "Thanks for your valuable review~\n\nNow you can either go back and refresh the record information or go to Myshare to check your own review! Also don't foget to check all the reviews written by all the users in the Review page~"
 
+@app.route('/deleteOneReview', methods=['POST'])
+def deleteOneReview():
+  print request.args
+  reviewID = request.form['reviewId']
+  cursor = g.conn.execute('''
+  DELETE FROM Review_Write_About WHERE ReviewID = %s
+  ''',(int(reviewID),))
+  cursor.close()
+
+  return redirect("/myshare")  
+  
 @app.route('/reviews')
 def reviews():
   print request.args
@@ -402,13 +454,13 @@ def myshare():
   cursor.close()
   #reviews
   cursor1 = g.conn.execute('''
-  SELECT r.Name, u.Name, rev.rate, rev.Comment 
+  SELECT rev.ReviewID,r.Name, u.Name, rev.rate, rev.Comment 
   FROM Review_Write_About as rev,Users as u,Records as r
   WHERE u.AccountID=%s and u.AccountID=rev.AccountID and rev.RecordID=r.RecordID
   ''',(UID,))
   names1 = []
   for result in cursor1:
-    names1.append([result[0],result[1],result[2],result[3]]) 
+    names1.append([result[0],result[1],result[2],result[3],result[4]]) 
   cursor1.close()
   print names1
   context = dict(data = names,data1=names1)

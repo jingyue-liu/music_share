@@ -39,7 +39,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 </style>
 </head>
 <body>
-  <h1 align="center">Chosen artist's albums</h1> 
+  <h1 align="center">{{artistname}}</h1> 
   <!-- 导航栏 -->
 <ul>
 <li><a href="/">Home</a></li>
@@ -52,24 +52,40 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 <li><a href="/test">Instruction</a></li>
 </ul>
 
+  <table align="center" id="tab1">
+    <tr>
+      <th>&nbsp;Name&nbsp;</th>
+      <th>&nbsp;Gender&nbsp;</th>
+	  <th>&nbsp;Nationality&nbsp;</th>
+	  <th>&nbsp;BirthDate&nbsp;</th>
+    </tr>
+    {% for line in artistinfo %}
+	  <tr>
+        {% for i in line %}
+          <td>&nbsp;{{i}}&nbsp;</td>
+        {% endfor %}
+      </tr>
+	{% endfor %}
+  </table>
+  
   <form align="center" method="POST" action="/album_records">
-    <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
+    <p>choose one album index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form>  
   <table align="center" id="tab">
     <tr>
-      <th>index</th>
-      <th>Album Name</th>
+      <th>&nbsp;index&nbsp;</th>
+      <th>&nbsp;Album Name&nbsp;</th>
     </tr>
     {% for line in data %}
 	  <tr>
         {% for i in line %}
-          <td>{{i}}</td>
+          <td>&nbsp;{{i}}&nbsp;</td>
         {% endfor %}
       </tr>
 	{% endfor %}
   </table>
   <form align="center" method="POST" action="/album_records">
-    <p>choose one index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
+    <p>choose one album index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form> 
 <script type="text/javascript">
 

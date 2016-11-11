@@ -58,44 +58,46 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 
   <table id="tab" align="center" margin:0 auto>
     <tr>      
-	  <th>ListIndex</th>
-	  <th>ListName</th>
-	  <th>RecordIndex</th>
-	  <th>RecordName</th>
+	  <th>&nbsp;ListIndex&nbsp;</th>
+	  <th>&nbsp;ListName&nbsp;</th>
+	  <th>&nbsp;RecordIndex&nbsp;</th>
+	  <th>&nbsp;RecordName&nbsp;</th>
     </tr>
     {% for line in data %}
 	  <tr>
         {% for i in line %}
-          <td>{{i}}</td>
+          <td>&nbsp;{{i}}&nbsp;</td>
         {% endfor %}
       </tr>
 	{% endfor %}
   </table>
-  <div align="center">This users' Sharing Reviews</div>
+  <div align="center">This user's Sharing Reviews</div>
   <table id="tab1" align="center">
     <tr>
-      <th>Record</th>
-      <th>User</th>
-	  <th>rate</th>
-      <th>Comment</th>
+      <th>&nbsp;Record&nbsp;</th>
+      <th>&nbsp;User&nbsp;</th>
+	  <th>&nbsp;rate&nbsp;</th>
+      <th>&nbsp;Comment&nbsp;</th>
     </tr>
     {% for line1 in data1 %}
 	  <tr>
         {% for i1 in line1 %}
-          <td>{{i1}}</td>
+          <td>&nbsp;{{i1}}&nbsp;</td>
         {% endfor %}
       </tr>
 	{% endfor %}
   </table>
 
-  
-  
 <script type="text/javascript">
 
 var Ptr=document.getElementById("tab").getElementsByTagName("tr");
+var Ptr1=document.getElementById("tab1").getElementsByTagName("tr");
 function $() {
     for (j=1;j<Ptr.length+1;j++) { 
     Ptr[j-1].className = (j%2>0)?"t1":"t2"; 
+    }
+	for (j=1;j<Ptr1.length+1;j++) { 
+    Ptr1[j-1].className = (j%2>0)?"t1":"t2"; 
     }
 }
 window.onload=$;
@@ -108,24 +110,12 @@ for(var j=0;j<Ptr.length;j++) {
     this.className=this.tmpClass;
     };
 }
-
-</script>
-
-<script type="text/javascript">
-
-var Ptr=document.getElementById("tab1").getElementsByTagName("tr");
-function $() {
-    for (j=1;j<Ptr.length+1;j++) { 
-    Ptr[j-1].className = (j%2>0)?"t1":"t2"; 
-    }
-}
-window.onload=$;
-for(var j=0;j<Ptr.length;j++) {
-    Ptr[j].onmouseover=function(){
+for(var j=0;j<Ptr1.length;j++) {
+    Ptr1[j].onmouseover=function(){
     this.tmpClass=this.className;
     this.className = "t3";    
     };
-    Ptr[j].onmouseout=function(){
+    Ptr1[j].onmouseout=function(){
     this.className=this.tmpClass;
     };
 }

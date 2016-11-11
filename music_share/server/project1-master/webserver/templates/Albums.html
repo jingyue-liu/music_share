@@ -57,13 +57,15 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
   </form>  
   <table id="tab" align="center" margin:0 auto>
     <tr>
-      <th>index</th>
-      <th>Name</th>
+      <th> &nbsp;index&nbsp; </th>
+      <th> &nbsp;Album&nbsp; </th>
+	  <th> &nbsp;Hit song&nbsp; </th>
+	  <th> &nbsp;Artist&nbsp; </th>
     </tr>
     {% for line in data %}
 	  <tr>
         {% for i in line %}
-          <td>{{i}}</td>
+          <td>&nbsp;{{i}}&nbsp;</td>
         {% endfor %}
       </tr>
 	{% endfor %}
