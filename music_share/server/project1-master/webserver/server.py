@@ -485,8 +485,15 @@ def login():
 	Password = request.form['Password']
 	print "ID:"+str(UserID)+"--","Password:"+str(Password)
 	#eg: 1,fhgjhu
-	if int(UserID)==1 and str(Password)=='fhgjhu':
-		LoggedInUserID = int(UserID)
+	cursor = g.conn.execute('''
+	SELECT Password
+	FROM Users
+	WHERE AccountID = %s
+	''',(UserID,))
+	for result in cursor:
+	  if Password == result[0]:
+	#if int(UserID)==1 and str(Password)=='fhgjhu':
+	    LoggedInUserID = int(UserID)
 	return redirect('/')
 	
 @app.route('/logoff', methods=['POST'])
