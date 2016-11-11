@@ -587,7 +587,6 @@ def login():
 	''',(UserID,))
 	for result in cursor:
 	  if Password == result[0]:
-	#if int(UserID)==1 and str(Password)=='fhgjhu':
 	    LoggedInUserID = int(UserID)
 	return redirect('/')
 	
@@ -597,7 +596,22 @@ def logoff():
 	LoggedInUserID = -1
 	return redirect('/')
 
-
+@app.route('/signup', methods=['POST'])
+def signup():
+	Name = request.form['Name']
+	Password = request.form['Password']
+	cursor = g.conn.execute('''SELECT MAX(AccountID) FROM Users''')
+	for result in cursor:
+		UserID = result[0]+1
+	cursor.close()
+	g.conn.execute('''
+	INSERT INTO Users (AccountID, Name, Password) VALUES (%s,%s,%s)
+	''',(int(UserID),str(Name),str(Password))
+#	g.conn.execute('''
+#	INSERT INTO Users (AccountID, Name, Password) VALUES (%s,%s,%s)
+#	''',(int(UserID),str(Name),str(Password))
+	return 'Thanks for signing up~\n\nYour UserID is: ' + str(UserID) + '.\n\nNow you can go to homepage and login~'
+	
 
 if __name__ == "__main__":
   import click
