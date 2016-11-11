@@ -606,11 +606,8 @@ def signup():
 	cursor.close()
 	g.conn.execute('''
 	INSERT INTO Users (AccountID, Name, Password) VALUES (%s,%s,%s)
-	''',(int(UserID),str(Name),str(Password))
-#	g.conn.execute('''
-#	INSERT INTO Users (AccountID, Name, Password) VALUES (%s,%s,%s)
-#	''',(int(UserID),str(Name),str(Password))
-	return 'Thanks for signing up~\n\nYour UserID is: ' + str(UserID) + '.\n\nNow you can go to homepage and login~'
+	''',(int(UserID),str(Name),str(Password)))
+	return 'Thanks for signing up~\n\nYour UserID is: ' + str(UserID) + '.\n\nNow you can go to homepage and login~' + render_template("test.html")
 	
 
 if __name__ == "__main__":
