@@ -376,6 +376,7 @@ def add_to_mylist():
   if LoggedInUserID==-1:
     return redirect('/')
   mylistname = request.form["MyListName"]
+  print mylistname
   rId = int(request.form["RID"])
   
   cursor = g.conn.execute('''
