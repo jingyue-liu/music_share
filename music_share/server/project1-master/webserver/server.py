@@ -448,7 +448,7 @@ def reviews():
 def users():
   print request.args
 
-  cursor = g.conn.execute("SELECT AccountID,Name,Gender FROM Users")
+  cursor = g.conn.execute("SELECT AccountID,Name,Gender FROM Users ORDER BY AccountID")
   names = []
   for result in cursor:
     names.append([result[0],result[1],result[2]]) 
@@ -511,6 +511,22 @@ def myshare():
   print names1
   context = dict(data = names,data1=names1)
   return render_template("/Myshare.html",**context) 
+  
+#deleteOneRecordInAList
+@app.route('/deleteOneRecordInAList',methods=['POST'])
+def deleteOneRecordInAList():
+  global LoggedInUserID
+  print request.args
+  UID = LoggedInUserID
+  ListIndex = int(request.form['ListIndex'])
+  RecordIndex = int(request.form['RecordIndex'])
+  cursor = g.conn.execute('''
+  DELETE FROM Contain WHERE PersonalListID=%s and AccountID = %s and RecordID = %s
+  ''',(ListIndex,UID,RecordIndex))
+  cursor.close()
+
+  return redirect("/myshare") 
+
   
 @app.route('/manage_my_lists')
 def manage_my_lists():
