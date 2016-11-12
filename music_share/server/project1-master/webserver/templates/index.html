@@ -48,11 +48,19 @@
 <li><a href="/toplist">Toplist</a></li>
 <li><a href="/test">Instruction</a></li>
 </ul>
+
+{% if error %}
+<p align="center">{{ error }}</p>
+{% endif %}
+      
 <form method="POST" action="/login">
 <p align="center">Login Here: UserID:<input type="text" name="UserID"> Password:<input type="text" name="Password"> <input type="submit" value="Login"></p>
 </form>
 <form method="POST" action="/signup">
-<p align="center">Sign Up: Name:<input type="text" name="Name"> Password:<input type="text" name="Password"> <input type="submit" value="Signup"></p>
+<p align="center">Sign Up: Name:<input type="text" name="Name"> Password:<input type="text" name="Password"> 
+		Gender:<select name="Gender"><option value="Male">Male</option><option value="Female">Female</option>
+		</select> 
+		<input type="submit" value="Signup"></p>
 </form>
 <p align="center"><img src="../static/images/music_1.jpg"  alt="MusicShare"/></p>
 

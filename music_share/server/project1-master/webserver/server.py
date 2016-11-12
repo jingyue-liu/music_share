@@ -18,10 +18,11 @@ Read about it online.
 import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response
+from flask import Flask, request, render_template, g, redirect, Response, flash
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
+app.secret_key = "joyce"
 
 
 #
@@ -176,6 +177,7 @@ def index():
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
+
   if LoggedInUserID==-1:
     return render_template("index.html")
   else:
@@ -575,20 +577,23 @@ def test_extend():
 
 @app.route('/login', methods=['POST'])
 def login():
+	error = None
 	global LoggedInUserID
 	UserID = request.form['UserID']
 	Password = request.form['Password']
 	print "ID:"+str(UserID)+"--","Password:"+str(Password)
-	#eg: 1,fhgjhu
 	cursor = g.conn.execute('''
 	SELECT Password
 	FROM Users
 	WHERE AccountID = %s
 	''',(UserID,))
 	for result in cursor:
-	  if Password == result[0]:
-	    LoggedInUserID = int(UserID)
-	return redirect('/')
+	  if Password != result[0]:
+	    error ='Wrong UserID or Password, please try again.'
+	  else:
+		LoggedInUserID = int(UserID)
+		return redirect('/')
+	  return render_template('index.html', error = error)
 	
 @app.route('/logoff', methods=['POST'])
 def logoff():
@@ -598,20 +603,33 @@ def logoff():
 
 @app.route('/signup', methods=['POST'])
 def signup():
+	global LoggedInUserID
 	Name = request.form['Name']
 	Password = request.form['Password']
+	Gender = request.form['Gender']
 	cursor = g.conn.execute('''SELECT MAX(AccountID) FROM Users''')
 	for result in cursor:
-		UserID = result[0]+1
+		LoggedInUserID = result[0]+1
 	cursor.close()
 	g.conn.execute('''
-	INSERT INTO Users (AccountID, Name, Password) VALUES (%s,%s,%s)
-	''',(int(UserID),str(Name),str(Password))
-#	g.conn.execute('''
-#	INSERT INTO Users (AccountID, Name, Password) VALUES (%s,%s,%s)
-#	''',(int(UserID),str(Name),str(Password))
-	return 'Thanks for signing up~\n\nYour UserID is: ' + str(UserID) + '.\n\nNow you can go to homepage and login~'
+	INSERT INTO Users (AccountID, Gender, Name, Password) VALUES (%s,%s,%s,%s)
+	''',(int(LoggedInUserID),str(Gender),str(Name),str(Password)))
+	return 'Thanks for signing up~\n\nYour UserID is: ' + str(LoggedInUserID) + '.\n\nNow you can go back to homepage and login~'
 	
+@app.route('/update', methods=['POST'])
+def update():
+	global LoggedInUserID
+	Name = request.form['Name']
+	Password = request.form['Password']
+	Gender = request.form['Gender']
+	cursor = g.conn.execute('''
+	UPDATE Users 
+	SET Name = %s, Password = %s, Gender = %s
+	WHERE AccountID = %s
+	''',(str(Name),str(Password),str(Gender),int(LoggedInUserID)))
+	cursor.close()
+#	flash('Your personal infomation has been successfully updated. Now you can continue explore the website.')
+	return redirect('/logged_home')
 
 if __name__ == "__main__":
   import click

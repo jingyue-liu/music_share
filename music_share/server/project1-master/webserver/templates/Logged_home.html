@@ -33,9 +33,11 @@
 
 	
   </style>
+ 
 </head>
 
 <body>
+
   <h1 align="center">Music Share: Home</h1>
 <!-- 导航栏 -->
 <ul>
@@ -52,6 +54,17 @@
 <form method="POST" action="/logoff">
 <p align="center">Log off Here <input type="submit" value="Logoff"></p>
 </form>
+
+<form method="POST" action="/update">
+<p align="center">You can update your personal infomation here.</p>
+<p align="center">Update: Name:<input type="text" name="Name"> Password:<input type="text" name="Password"> 
+		Gender:<select name="Gender"><option value="Male">Male</option><option value="Female">Female</option>
+		</select> 
+		<input type="submit" value="Update"></p>
+</form>
+
+
+
 <p align="center"><img src="../static/images/music_1.jpg"  alt="MusicShare"/></p>
 
 
