@@ -615,6 +615,7 @@ def signup():
 	INSERT INTO Users (AccountID, Gender, Name, Password) VALUES (%s,%s,%s,%s)
 	''',(int(LoggedInUserID),str(Gender),str(Name),str(Password)))
 	return 'Thanks for signing up~\n\nYour UserID is: ' + str(LoggedInUserID) + '.\n\nNow you can go back to homepage and login~'
+
 	
 @app.route('/update', methods=['POST'])
 def update():
