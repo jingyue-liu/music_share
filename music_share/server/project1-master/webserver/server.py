@@ -511,6 +511,67 @@ def myshare():
   context = dict(data = names,data1=names1)
   return render_template("/Myshare.html",**context) 
   
+@app.route('/manage_my_lists')
+def manage_my_lists():
+  global LoggedInUserID
+  print request.args
+  UID = LoggedInUserID
+  #personallists
+  cursor = g.conn.execute('''
+  SELECT P.PersonalListID,P.Name
+  FROM PersonalLists_Save as P,Users as U
+  WHERE U.AccountID = P.AccountID and U.AccountID=%s
+  ORDER BY P.PersonalListID
+  ''',(UID,))
+  lists = []
+  for result in cursor:
+    lists.append([result[0],result[1]])
+  cursor.close()
+ 
+  context = dict(data = lists)
+  return render_template("/Manage_my_lists.html",**context) 
+
+#add_new_list
+@app.route('/add_new_list',methods=['POST'])
+def add_new_list():
+  global LoggedInUserID
+  print request.args
+  UID = LoggedInUserID
+  Newlistname = request.form['NewListName']
+  
+  cursor = g.conn.execute('''
+  SELECT MAX(per.PersonalListID)
+  FROM PersonalLists_Save per, Users u
+  WHERE per.AccountID=u.AccountID and u.AccountID=%s
+  ''',(UID,))
+  listID = 1
+  for result in cursor:
+    if result[0]!=None:
+      listID=int(result[0])+1
+  cursor.close()
+  
+  cursor = g.conn.execute('''
+  INSERT INTO PersonalLists_Save (PersonalListID,AccountID,Name) VALUES (%s,%s,%s)
+  ''',(listID,UID,Newlistname))
+  cursor.close()
+
+  return redirect("/manage_my_lists") 
+  
+#delete_one_list  
+@app.route('/delete_one_list',methods=['POST'])
+def delete_one_list():
+  global LoggedInUserID
+  print request.args
+  UID = LoggedInUserID
+  deleteId = request.form['DeleteID']
+  
+  cursor = g.conn.execute('''
+  DELETE FROM PersonalLists_Save WHERE AccountID = %s and PersonalListID = %s
+  ''',(UID,deleteId))
+  cursor.close()
+
+  return redirect("/manage_my_lists") 
+  
 @app.route('/oneshare',methods=['POST'])
 def oneshare():
   print request.args

@@ -39,7 +39,7 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 </style>
 </head>
 <body>
-  <h1 align="center">My Sharing</h1> 
+  <h1 align="center">Manage my sharing lists</h1> 
   <!-- 导航栏 -->
 <ul>
 <li><a href="/">Home</a></li>
@@ -52,16 +52,16 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 <li><a href="/myshare">Myshare</a></li>
 </ul>
 <div align="center">My Sharing Lists</div>
-  <ul align="center"><li><a href="/manage_my_lists">Manage Lists</a></li></ul>
-  <form align="center" method="POST" action="/deleteOneRecordInAList">
-    <p>Delete one share: ListIndex <input type="text" name="id">RecordIndex <input type="text" name="id"> <input type="submit" value="Delete"></p>
+  <form align="center" method="POST" action="/add_new_list">
+    <p>Add a new list: New list name: <input type="text" name="NewListName"> <input type="submit" value="Add"></p>
+  </form>  
+  <form align="center" method="POST" action="/delete_one_list">
+    <p>Delete one list: ListIndex <input type="text" name="DeleteID"><input type="submit" value="Delete"></p>
   </form>  
   <table id="tab" align="center" margin:0 auto>
     <tr>      
 	  <th>&nbsp;ListIndex&nbsp;</th>
 	  <th>&nbsp;ListName&nbsp;</th>
-	  <th>&nbsp;RecordIndex&nbsp;</th>
-	  <th>&nbsp;RecordName&nbsp;</th>
     </tr>
     {% for line in data %}
 	  <tr>
@@ -72,38 +72,12 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 	{% endfor %}
   </table>
   <div align="center">My Sharing Reviews</div>
-  <table id="tab1" align="center">
-    <tr>
-	  <th>&nbsp;ReviewID&nbsp;</th>
-      <th>&nbsp;Record&nbsp;</th>
-      <th>&nbsp;User&nbsp;</th>
-	  <th>&nbsp;rate&nbsp;</th>
-      <th>&nbsp;Comment&nbsp;</th>
-    </tr>
-    {% for line1 in data1 %}
-	  <tr>
-        {% for i1 in line1 %}
-          <td>&nbsp;{{i1}}&nbsp;</td>
-        {% endfor %}
-      </tr>
-	{% endfor %}
-  </table>
-    <form align="center" method="POST" action="/deleteOneReview">
-    <p>Delete one review: ReviewIndex  <input type="text" name="reviewId"><input type="submit" value="Delete"></p>
-    </form> 
-
   
-  
-<script type="text/javascript">
-
+<script type="text/javascript"> 
 var Ptr=document.getElementById("tab").getElementsByTagName("tr");
-var Ptr1=document.getElementById("tab1").getElementsByTagName("tr");
 function $() {
     for (j=1;j<Ptr.length+1;j++) { 
     Ptr[j-1].className = (j%2>0)?"t1":"t2"; 
-    }
-	for (j=1;j<Ptr1.length+1;j++) { 
-    Ptr1[j-1].className = (j%2>0)?"t1":"t2"; 
     }
 }
 window.onload=$;
@@ -116,18 +90,7 @@ for(var j=0;j<Ptr.length;j++) {
     this.className=this.tmpClass;
     };
 }
-for(var j=0;j<Ptr1.length;j++) {
-    Ptr1[j].onmouseover=function(){
-    this.tmpClass=this.className;
-    this.className = "t3";    
-    };
-    Ptr1[j].onmouseout=function(){
-    this.className=this.tmpClass;
-    };
-}
-
 </script>
-
 </body>
 
 

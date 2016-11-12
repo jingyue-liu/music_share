@@ -131,7 +131,7 @@ DROP TABLE IF EXISTS Contain CASCADE;
 CREATE TABLE Contain(
 	PersonalListID int,
 	AccountID int,
-	FOREIGN KEY (AccountID,PersonalListID) REFERENCES PersonalLists_Save,
+	FOREIGN KEY (AccountID,PersonalListID) REFERENCES PersonalLists_Save ON DELETE CASCADE,
 	RecordID int REFERENCES Records,
 	PRIMARY KEY (PersonalListID,AccountID,RecordID)
 );
