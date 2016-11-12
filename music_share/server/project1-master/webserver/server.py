@@ -231,7 +231,7 @@ def album_records():
   print request.args
   Id = request.form['id']
   cursor = g.conn.execute('''
-  SELECT r.RecordID,r.Name,r.Language,r.ReleaseYear,(r.Length/60000-0.5)::int::text||'min'::text||((r.Length-(r.Length/60000-0.5)::int*60000)/1000-0.5)::int::text||'s',r.Style,r.Songwriter
+  SELECT r.RecordID,r.Name,r.Language,r.ReleaseYear,(r.Length/60000)::int::text||'min'::text||((r.Length-(r.Length/60000)::int*60000)/1000-0.5)::int::text||'s',r.Style,r.Songwriter
   FROM Records as r,Have as h
   WHERE r.RecordID = h.RecordID and h.AlbumID=%s
   ''',(int(Id),))
@@ -283,6 +283,26 @@ def artists_album():
   for result in cursor:
     names.append([result[0],result[1]])  # can also be accessed using result[0]
   cursor.close()
+  
+  cursor0 = g.conn.execute('''
+  SELECT g.ArtistID
+  FROM Groups g
+  WHERE g.ArtistID = %s
+  ''',(int(Id),))
+  is_group = None
+  for result in cursor0:
+    is_group=result[0]
+  cursor0.close()
+  group_info = []
+  if is_group != None:
+    cur = g.conn.execute('''
+    SELECT s.ArtistID,a_s.Name,b.Start_Time,b.End_Time
+    FROM Belong b,Artists a_g,Artists a_s,Singers s,Groups g
+    WHERE g.ArtistID = %s and g.ArtistID=a_g.ArtistID and s.ArtistID=a_s.ArtistID and b.GroupID=g.ArtistID and b.SingerID=s.ArtistID
+    ''',(int(Id),))    
+    for result in cur:
+      group_info.append([result[0],result[1],result[2],result[3]])
+    cur.close()    
 
   cursor1 = g.conn.execute('''
   SELECT ar.Name
@@ -304,7 +324,7 @@ def artists_album():
     artistInfo.append([result[0],result[1],result[2],result[3]])  # can also be accessed using result[0]
   cursor2.close()
   
-  context = dict(data = names,artistname=ArtistName,artistinfo=artistInfo)
+  context = dict(data = names,artistname=ArtistName,artistinfo=artistInfo,group_info=group_info,is_group=is_group)
   return render_template("Artists_album.html",**context)  
   
 @app.route('/records')
@@ -338,7 +358,7 @@ def one_record():
   cursor0.close()
   
   cursor = g.conn.execute('''
-  SELECT r.RecordID,r.Name,r.Language,r.ReleaseYear,(r.Length/60000-0.5)::int::text||'min'::text||((r.Length-(r.Length/60000-0.5)::int*60000)/1000-0.5)::int::text||'s',r.Style,r.Songwriter
+  SELECT r.RecordID,r.Name,r.Language,r.ReleaseYear,(r.Length/60000)::int::text||'min'::text||((r.Length-(r.Length/60000)::int*60000)/1000)::int::text||'s',r.Style,r.Songwriter
   FROM Records as r
   WHERE r.RecordID = %s
   ''',(int(Id),))

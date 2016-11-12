@@ -51,8 +51,8 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
 <li><a href="/toplist">Toplist</a></li>
 <li><a href="/test">Instruction</a></li>
 </ul>
-
-  <table align="center" id="tab1">
+{% if not is_group %}
+  <table align="center" id="tab">
     <tr>
       <th>&nbsp;Name&nbsp;</th>
       <th>&nbsp;Gender&nbsp;</th>
@@ -67,11 +67,33 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
       </tr>
 	{% endfor %}
   </table>
+{% endif %} 
+{% if is_group %}
+<p align="center">Members infomation:</p>
+  <table align="center" id="tab">
+    <tr>
+      <th>&nbsp;Singer Index&nbsp;</th>
+      <th>&nbsp;Singer Name&nbsp;</th>
+	  <th>&nbsp;Start Time&nbsp;</th>
+	  <th>&nbsp;Quit Time&nbsp;</th>
+    </tr>
+    {% for line in group_info %}
+	  <tr>
+        {% for i in line %}
+          <td>&nbsp;{{i}}&nbsp;</td>
+        {% endfor %}
+      </tr>
+	{% endfor %}
+  </table>
+  <form align="center" method="POST" action="/artists_album">
+    <p>Choose one member index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
+  </form>  
+{% endif %}
   
   <form align="center" method="POST" action="/album_records">
     <p>choose one album index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form>  
-  <table align="center" id="tab">
+  <table align="center" id="tab1">
     <tr>
       <th>&nbsp;index&nbsp;</th>
       <th>&nbsp;Album Name&nbsp;</th>
@@ -87,12 +109,17 @@ tr.t3 td {background-color:#ccc;}/* 鼠标经过时的背景色 */
   <form align="center" method="POST" action="/album_records">
     <p>choose one album index: <input type="text" name="id"> <input type="submit" value="Choose"></p>
   </form> 
+
 <script type="text/javascript">
 
 var Ptr=document.getElementById("tab").getElementsByTagName("tr");
+var Ptr1=document.getElementById("tab1").getElementsByTagName("tr");
 function $() {
     for (j=1;j<Ptr.length+1;j++) { 
     Ptr[j-1].className = (j%2>0)?"t1":"t2"; 
+    }
+	for (j=1;j<Ptr1.length+1;j++) { 
+    Ptr1[j-1].className = (j%2>0)?"t1":"t2"; 
     }
 }
 window.onload=$;
@@ -102,6 +129,15 @@ for(var j=0;j<Ptr.length;j++) {
     this.className = "t3";    
     };
     Ptr[j].onmouseout=function(){
+    this.className=this.tmpClass;
+    };
+}
+for(var j=0;j<Ptr1.length;j++) {
+    Ptr1[j].onmouseover=function(){
+    this.tmpClass=this.className;
+    this.className = "t3";    
+    };
+    Ptr1[j].onmouseout=function(){
     this.className=this.tmpClass;
     };
 }
