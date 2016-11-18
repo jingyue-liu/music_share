@@ -482,11 +482,11 @@ def toplist():
   print request.args
 
   cursor = g.conn.execute('''
-  select R3.name,a1.name,a1.recordid
+  select R3.name,a1.name,R3.avg,a1.recordid
   from
   (select Records.RecordID,Records.name,R2.avg
   from(
-  select R1.RecordID,avg(R1.rate)
+  select R1.RecordID,Round(avg(R1.rate),1) as avg
   from
   (select RecordID, rate
   from Review_Write_About) as R1
@@ -499,12 +499,14 @@ def toplist():
   ORDER BY R3.avg DESC
   limit 5;
   ''')
+  
   names = []
   i=1
   for result in cursor:
-    names.append([i,result[0],result[1],result[2]])  # can also be accessed using result[0]
+    names.append([i,result[0],result[1],result[2],result[3]])  # can also be accessed using result[0]
     i=i+1
   cursor.close()
+  
 
   context = dict(data = names)
   return render_template("Toplists.html",**context)
