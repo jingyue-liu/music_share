@@ -482,20 +482,28 @@ def toplist():
   print request.args
 
   cursor = g.conn.execute('''
-  select a2.rank,a2.name as Record,a1.name as Artist, a2.recordid
+  select R3.name,a1.name,a1.recordid
   from
+  (select Records.RecordID,Records.name,R2.avg
+  from(
+  select R1.RecordID,avg(R1.rate)
+  from
+  (select RecordID, rate
+  from Review_Write_About) as R1
+  group by R1.RecordID) as R2, Records
+  where R2.RecordID = Records.RecordID)as R3,
   (select p.recordid, a.name 
-  from perform p join artists a 
-  on p.artistid=a.artistid) AS a1,
-  (select r.recordid,r.name,i.rank
-  from include i,toplists t,records r 
-  where r.recordid=i.recordid and i.toplistid=t.toplistid) AS a2
-  where a1.recordid=a2.recordid
-  Order By a2.rank;
+  from perform p, artists a 
+  where p.artistid=a.artistid) AS a1
+  where R3.recordid = a1.recordid
+  ORDER BY R3.avg DESC
+  limit 5;
   ''')
   names = []
+  i=1
   for result in cursor:
-    names.append([result[0],result[1],result[2],result[3]])  # can also be accessed using result[0]
+    names.append([i,result[0],result[1],result[2]])  # can also be accessed using result[0]
+    i=i+1
   cursor.close()
 
   context = dict(data = names)
